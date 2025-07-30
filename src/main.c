@@ -14,8 +14,10 @@
 #define MAX_SHOT_POWER 600.0f  // força máxima em pixels/s
 
 #define BALL_RADIUS 5 // raio da
-#define HOLE_RADIUS 15 // raio para “entrar” no buraco
-#define HOLE_GROUND_RADIUS 60 // raio para “chão virtual” ao redor
+#define HOLE_RADIUS 8 // raio para “entrar” no buraco
+#define HOLE_GROUND_RADIUS 120 // raio para “chão virtual” ao redor
+#define AIR_DRAG 0.02f // coeficiente de arrasto no ar (0.0–1.0)
+#define GROUND_FRICTION 0.5f // coeficiente de atrito ao rolar no solo
 
 // Estrutura do jogador
 typedef struct {
@@ -110,13 +112,30 @@ void UpdateGame(void) {
 
         float dx = ball.position.x - course.holePosition.x;
         float dy = ball.position.y - course.holePosition.y;
-        if (sqrtf(dx * dx + dy * dy) < HOLE_RADIUS) {
-            // “Caiu” no buraco
+        float dist = sqrtf(dx*dx + dy*dy);
+        if (dist < HOLE_RADIUS) {
+            // entrou no buraco
             ball.position = course.holePosition;
             ball.velocity = (Vector2){ 0, 0 };
             ball.inMotion = false;
-            return; // sai antes dos quicamentos de parede
+            return;
         }
+
+        // 4) “Chão virtual” ao redor do buraco
+        if (dist < HOLE_GROUND_RADIUS) {
+            // se estiver abaixo da altura do buraco, colide ali
+            if (ball.position.y >= course.holePosition.y) {
+                ball.position.y = course.holePosition.y;
+                // quique suave
+                ball.velocity.y = -ball.velocity.y * 0.5f;
+                if (fabsf(ball.velocity.y) < 20.0f) {
+                    ball.velocity = (Vector2){ 0, 0 };
+                    ball.inMotion = false;
+                }
+                return;
+            }
+        }
+
         // esquerda
         if (ball.position.x <= BALL_RADIUS) {
             ball.position.x = BALL_RADIUS;
