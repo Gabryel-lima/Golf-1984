@@ -38,8 +38,22 @@ Course course;
 
 // Funções principais
 void InitGame(void);
-void UpdateGame(void);
-void DrawGame(void);
+// void UpdateGame(void);
+// void DrawGame(void);
+
+void InitGame(void) {
+    player.club = 1;
+    player.position = (Vector2) {100, 100 - SCREEN_WIDTH};
+    player.power = 0.5f;
+
+    ball.position = player.position;
+    ball.velocity = (Vector2) {0, 0};
+    ball.inMotion = false;
+
+    course.holePosition = (Vector2) {SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100};
+    course.windStrength = 0.3f;
+    course.windAngle = 45.0f; // graus
+}
 
 // Entrypoint
 int main(void) {
