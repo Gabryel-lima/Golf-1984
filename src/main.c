@@ -38,7 +38,7 @@ Course course;
 
 // Funções principais
 void InitGame(void);
-// void UpdateGame(void);
+void UpdateGame(void);
 // void DrawGame(void);
 
 void InitGame(void) {
@@ -53,6 +53,28 @@ void InitGame(void) {
     course.holePosition = (Vector2) {SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100};
     course.windStrength = 0.3f;
     course.windAngle = 45.0f; // graus
+}
+
+void UpdateGame(void) {
+    if(!ball.inMotion && IsKeyPressed(KEY_SPACE)) {
+        float angle = 45.0f * (PI / 180.0f); // 45° em radianos
+        float power = player.power * 600.0f;
+        ball.velocity = (Vector2) { cosf(angle) * power -sinf(angle) * power };
+        ball.inMotion = true;
+    }
+
+    if(ball.inMotion) {
+        ball.velocity.y += 9.8f * 0.5f; // gravidade
+        ball.position.x += ball.velocity.x * GetFrameTime();
+        ball.velocity.y += ball.velocity.y * GetFrameTime();
+        
+        // limite do chão
+        if(ball.position.y > SCREEN_HEIGHT - 10) {
+            ball.position.y = SCREEN_HEIGHT - 10;
+            ball.velocity = (Vector2) {0, 0};
+            ball.inMotion = false;
+        }
+    }
 }
 
 // Entrypoint
