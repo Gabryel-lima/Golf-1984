@@ -39,11 +39,11 @@ Course course;
 // Funções principais
 void InitGame(void);
 void UpdateGame(void);
-// void DrawGame(void);
+void DrawGame(void);
 
 void InitGame(void) {
     player.club = 1;
-    player.position = (Vector2) {100, 100 - SCREEN_WIDTH};
+    player.position = (Vector2) {100, SCREEN_HEIGHT - 100};
     player.power = 0.5f;
 
     ball.position = player.position;
@@ -75,6 +75,23 @@ void UpdateGame(void) {
             ball.inMotion = false;
         }
     }
+}
+
+void DrawGame(void) {
+    // player
+    DrawCircleV(player.position, 10, BLUE);
+
+    // ball
+    DrawCircleV(ball.position, 5, WHITE);
+
+    // hole
+    DrawCircleV(course.holePosition, 6, BLACK);
+
+    // draw HUD
+    DrawText("STROKE PLAY", 10, 10, 20, WHITE);
+    DrawText(TextFormat("CLUB %dW", player.club), 10, 40, 20, WHITE);
+    DrawText(TextFormat("POWER %.1f", player.power), 10, 70, 20, WHITE);
+    DrawText(TextFormat("WIND %.1f @ %.0f°", course.windStrength, course.windAngle), 10, 100, 20, WHITE);
 }
 
 // Entrypoint
