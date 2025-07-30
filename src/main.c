@@ -59,7 +59,7 @@ void UpdateGame(void) {
     if(!ball.inMotion && IsKeyPressed(KEY_SPACE)) {
         float angle = 45.0f * (PI / 180.0f); // 45° em radianos
         float power = player.power * 600.0f;
-        ball.velocity = (Vector2) { cosf(angle) * power -sinf(angle) * power };
+        ball.velocity = (Vector2) { cosf(angle) * power, -sinf(angle) * power };
         ball.inMotion = true;
     }
 
