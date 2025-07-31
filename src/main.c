@@ -54,11 +54,6 @@ Player player;
 Ball ball;
 Course course;
 
-// Funções principais
-void InitGame(void);
-void UpdateGame(void);
-void DrawGame(void);
-
 void InitGame(void) {
     player.power = 0.0f;     // começamos sem carga
     player.isCharging = false;
