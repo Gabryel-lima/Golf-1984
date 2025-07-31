@@ -16,8 +16,15 @@
 #define BALL_RADIUS 5 // raio da
 #define HOLE_RADIUS 8 // raio para “entrar” no buraco
 #define HOLE_GROUND_RADIUS 120 // raio para “chão virtual” ao redor
-#define AIR_DRAG 0.02f // coeficiente de arrasto no ar (0.0–1.0)
-#define GROUND_FRICTION 0.5f // coeficiente de atrito ao rolar no solo
+// #define BALL_MASS 45.93f
+
+// #define AIR_DRAG 0.5f // coeficiente de arrasto no ar (0.0–1.0)
+// #define GROUND_FRICTION 0.4f // coeficiente de atrito ao rolar no solo
+
+#define GRAVITY 9.80665f // m/s²
+#define PPM 100.0f // pixels por metro
+#define GRAVITY_PX (GRAVITY * PPM) // px/s²
+// #define RESTITUTION_COEF 0.6f // 0 = absorve totalmente, 1 = ricochete perfeito
 
 // Estrutura do jogador
 typedef struct {
@@ -96,10 +103,10 @@ void UpdateGame(void) {
     // Movimento
     if (ball.inMotion) {
         // Gravidade
-        ball.velocity.y += 9.8f * dt;
+        ball.velocity.y += GRAVITY_PX * dt;
 
         // Vento (usa course.windAngle corretamente)
-        float windRad = course.windAngle * (PI/180.0f);
+        float windRad = course.windAngle * (PI / 180.0f);
         ball.velocity.x += course.windStrength * cosf(windRad) * dt;
         ball.velocity.y += course.windStrength * sinf(windRad) * dt;
 
@@ -121,7 +128,7 @@ void UpdateGame(void) {
             return;
         }
 
-        // 4) “Chão virtual” ao redor do buraco
+        // “Chão virtual” ao redor do buraco
         if (dist < HOLE_GROUND_RADIUS) {
             // se estiver abaixo da altura do buraco, colide ali
             if (ball.position.y >= course.holePosition.y) {
