@@ -65,7 +65,7 @@ void InitGame(void) {
     ball.velocity = (Vector2) {0, 0};
     ball.inMotion = false;
 
-    course.holePosition = (Vector2) {SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100};
+    course.holePosition = (Vector2) {SCREEN_WIDTH - 100, player.position.y};
     course.windStrength = 0.3f;
     course.windAngle = 45.0f; // graus
 }
