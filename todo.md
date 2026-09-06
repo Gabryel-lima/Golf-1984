@@ -14,19 +14,30 @@ O estado atual (`src/main.c`) tem um bug que impede jogar: o ângulo do tiro usa
 `course.windAngle` em vez de um ângulo controlado pelo jogador. Antes de adicionar
 qualquer feature nova, arrumar isso.
 
-- [ ] Mover as `struct Player`, `Ball`, `Course` e os protótipos de função para `src/game.h`
+- [x] Mover as `struct Player`, `Ball`, `Course` e os protótipos de função para `src/game.h`
       (hoje está vazio; `main.c` concentra tudo, o que não bate com o README).
-- [ ] Mover `InitGame`, `UpdateGame`, `DrawGame` para `src/game.c`; `main.c` deve conter
+- [x] Mover `InitGame`, `UpdateGame`, `DrawGame` para `src/game.c`; `main.c` deve conter
       apenas o loop (`InitWindow`/`while`/`CloseWindow`).
-- [ ] Adicionar `float aimAngle` em `Player`, controlado por `KEY_LEFT`/`KEY_RIGHT`
+- [x] Adicionar `float aimAngle` em `Player`, controlado por `KEY_LEFT`/`KEY_RIGHT`
       (o README já promete isso, o código não implementa).
-- [ ] Corrigir o disparo em `UpdateGame` para usar `player.aimAngle`, não `course.windAngle`.
-- [ ] Separar claramente "força do vento como constante somada à velocidade" (atual) de
+- [x] Corrigir o disparo em `UpdateGame` para usar `player.aimAngle`, não `course.windAngle`.
+- [x] Separar claramente "força do vento como constante somada à velocidade" (atual) de
       "força do vento como deslocamento acumulado" — hoje o vento é aplicado como aceleração
       contínua em todo frame de voo, o que é razoável, mas precisa de comentário/decisão
       explícita, não um valor mágico herdado do protótipo.
-- [ ] Testar manualmente: mirar, carregar, soltar, ver a bola seguir o ângulo escolhido
-      (não o vento).
+      → decisão registrada em comentário no código: vento = aceleração contínua durante o voo.
+- [ ] **Testar manualmente** (pendente — ver nota abaixo): mirar, carregar, soltar, ver a
+      bola seguir o ângulo escolhido (não o vento).
+
+> **Nota sobre verificação nesta sessão**: este ambiente não tem `raylib` disponível
+> (não há pacote `libraylib-dev` nos repositórios acessíveis aqui, e a instrução do
+> README para Ubuntu/Debian não corresponde a um pacote oficial — outro item para revisar
+> no README). A refatoração foi validada por compilação contra um *stub* local de
+> `raylib.h` (mesmas assinaturas de tipos/funções usadas, sem implementação real) só para
+> garantir que `game.h`/`game.c`/`main.c` são sintaticamente corretos e usam os tipos
+> certos — **isso não substitui rodar o jogo de verdade**. Rodar `make && ./Golf`
+> localmente e confirmar que a seta esquerda/direita gira a linha de mira (linha amarela
+> adicionada em `DrawGame`) e que o tiro sai na direção da mira, não do vento.
 
 ## Fase 1 — Mecânica de tacada fiel ao original (swing meter)
 
@@ -96,9 +107,10 @@ a física e a pontuação.
 - [ ] SFX de tacada, bola caindo no buraco, splash na água.
 - [ ] Música de fundo em loop, estilo chiptune (opcional).
 
-## Fase 7 — Extensão 2D/3D (o "3D" mencionado no pedido)
+## Fase 7 — Extensão 2D/3D (FORA DE ESCOPO — decisão tomada: fidelidade histórica 2D)
 
-O jogo original é 2D top-down. Se a intenção é ir além da fidelidade histórica:
+O jogo original é 2D top-down. Esta fase fica registrada apenas como histórico da
+discussão de escopo; não será implementada.
 
 - [ ] Avaliar câmera 3D em perspectiva (raylib tem `Camera3D` pronta) como modo alternativo,
       mantendo a física de projétil já existente adaptada para `Vector3`.
@@ -117,9 +129,11 @@ O jogo original é 2D top-down. Se a intenção é ir além da fidelidade histó
 
 ## Notas de decisão em aberto
 
-- Fidelidade histórica (senha, swing meter puro, 2D) vs. remake modernizado (save file,
-  câmera 3D, gráficos maiores) — a Fase 7 e o item de persistência da Fase 4 dependem
-  dessa escolha.
+- **Resolvido**: fidelidade histórica confirmada (2D puro, sem câmera 3D). A Fase 7
+  fica fora de escopo — mantida no documento só como registro histórico da decisão,
+  não como trabalho planejado.
+- Persistência do progresso (Fase 4): ainda em aberto se será senha estilo NES ou
+  arquivo de save local — decidir quando chegar na Fase 4.
 - Fonte dos dados dos 18 buracos: hardcoded em `.c`/`.h` é suficiente para o escopo atual;
   formato de arquivo externo (JSON/CSV) só se houver necessidade de editar buracos sem
   recompilar.
